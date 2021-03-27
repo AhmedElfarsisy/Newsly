@@ -1,4 +1,4 @@
-package com.iti.gov.weather.favorite.viewmodel
+package com.iti.elfarsisy.mad41.newsly.features.signUp.viewmodel
 
 class ValueWrapper<T>(private val value: T) {
 

@@ -12,7 +12,7 @@ class UserRepo private constructor(): UserRepoInterface {
         private var instance: UserRepo? = null
         private var newsDB: NewsDB? = null
 
-        fun getUserRepoInstance(context: Context): UserRepo? {
+        fun getUserRepoInstance(context: Context): UserRepoInterface? {
 
             if (instance == null) {
 
