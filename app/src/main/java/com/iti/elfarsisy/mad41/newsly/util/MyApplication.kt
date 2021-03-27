@@ -11,6 +11,7 @@ import timber.log.Timber.DebugTree
 * config Timber
 * Get Application context
 * */
+
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
