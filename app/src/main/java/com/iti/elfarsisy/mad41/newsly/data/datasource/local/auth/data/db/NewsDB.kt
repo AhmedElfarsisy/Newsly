@@ -4,10 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.iti.elfarsisy.mad41.newsly.data.model.User
+import androidx.room.TypeConverters
 import com.iti.elfarsisy.mad41.newsly.data.model.UserDao
+import com.iti.elfarsisy.mad41.newsly.data.model.UserPojo
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+
+
+@Database(entities = [UserPojo::class], version = 1, exportSchema = false)
 abstract class NewsDB : RoomDatabase() {
 
     abstract  fun userDao(): UserDao?

@@ -1,37 +1,39 @@
 package com.iti.elfarsisy.mad41.newsly.features.signUp.viewmodel
 
+import android.renderscript.Sampler
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.iti.elfarsisy.mad41.newsly.data.datasource.local.auth.data.userRepo.UserRepoInterface
-import com.iti.elfarsisy.mad41.newsly.data.model.User
+import com.iti.elfarsisy.mad41.newsly.data.model.UserPojo
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 class SignUpViewModel(private val userRepo: UserRepoInterface?) : ViewModel() {
 
     private var _signUpFlagLiveData = MutableLiveData<ValueWrapper<Boolean>>()
-    var signUpFlagLiveData = _signUpFlagLiveData
+    val signUpFlagLiveData = _signUpFlagLiveData
 
     private var _inValidEmailAddressLiveData = MutableLiveData<ValueWrapper<Boolean>>()
-    var inValidEmailAddressLiveData = _inValidEmailAddressLiveData
+    val inValidEmailAddressLiveData = _inValidEmailAddressLiveData
 
     private var _passwordMismatchLiveData = MutableLiveData<ValueWrapper<Boolean>>()
-    var passwordMismatchLiveData = _passwordMismatchLiveData
+    val passwordMismatchLiveData = _passwordMismatchLiveData
 
     private var _fillAllFieldsLiveData = MutableLiveData<ValueWrapper<Boolean>>()
-    private var fillAllFieldsLiveData = _fillAllFieldsLiveData
+    val fillAllFieldsLiveData = _fillAllFieldsLiveData
 
+    private var _addUserLiveData = MutableLiveData<UserPojo>()
+    val addUserLiveData = _addUserLiveData
 
-    fun signUp(user: User) {
+    private var _userAlreadyExistLiveData = MutableLiveData<ValueWrapper<Boolean>>()
+    val userAlreadyExistLiveData = _userAlreadyExistLiveData
 
-        viewModelScope.launch {
+    private var _homeUserLiveDate = MutableLiveData<UserPojo>()
+    val homeUserLiveData = _homeUserLiveDate
 
-            userRepo?.signUp(user)
-        }
-
-    }
 
     fun navigateToHome() {
 
@@ -40,26 +42,28 @@ class SignUpViewModel(private val userRepo: UserRepoInterface?) : ViewModel() {
 
     fun validateUserSignUpData(email: String, password: String, confirmPassword: String) {
 
-        // Validate email
-        val emailRegex = """a([bc]+)d?""".toRegex()
-        val matchResult = emailRegex.matchEntire("abbccbbd")
+        // Validate user signUp data
+        if (email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
 
-        // Validate password
-        if (password != confirmPassword) {
+            _fillAllFieldsLiveData.postValue(ValueWrapper(true))
+        }
+        else if (!isEmailValid(email)) {
+
+            _inValidEmailAddressLiveData.postValue(ValueWrapper(true))
+
+        } else if (password != confirmPassword) {
 
             _passwordMismatchLiveData.postValue(ValueWrapper(true))
 
-        } else if(email.isBlank() || password.isBlank() || confirmPassword.isBlank()){
+        } else {
 
-
+            addUserLiveData.postValue(UserPojo(email = email, password = password))
         }
-
-
 
 
     }
 
-    fun isEmailValid(email: String): Boolean {
+    private fun isEmailValid(email: String): Boolean {
         return Pattern.compile(
             "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@"
                     + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
@@ -70,7 +74,33 @@ class SignUpViewModel(private val userRepo: UserRepoInterface?) : ViewModel() {
         ).matcher(email).matches()
     }
 
-    class SingUpViewModelFactory(private val userRepo: UserRepoInterface?) : ViewModelProvider.NewInstanceFactory() {
+
+    fun signUp(userPojo: UserPojo) {
+
+        viewModelScope.launch {
+//
+//            Log.i("TAG", "signUp: returned result ${userRepo?.signUp(userPojo)}")
+
+            val result = userRepo?.signUp(userPojo)
+            Log.i("TAG", "signUp: returned result ${result}")
+
+            if ( result == -1L) {
+                _userAlreadyExistLiveData.postValue(ValueWrapper(true))
+            } else {
+                _homeUserLiveDate.postValue(userPojo)
+            }
+
+//            when(userRepo?.signUp(userPojo)) {
+//
+//                -1L -> _userNotFoundLiveData.postValue(true)
+//                else -> _homeUserLiveDate.postValue(userPojo)
+//            }
+        }
+
+    }
+
+    class SingUpViewModelFactory(private val userRepo: UserRepoInterface?) :
+        ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return SignUpViewModel(userRepo) as T
