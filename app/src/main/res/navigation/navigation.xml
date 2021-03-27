@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
 
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.iti.elfarsisy.mad41.newsly.features.home.ui.HomeFragment"
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_articleDetailsFragment"
+            app:destination="@id/articleDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/articleDetailsFragment"
+        android:name="com.iti.elfarsisy.mad41.newsly.features.details.ui.ArticleDetailsFragment"
+        android:label="ArticleDetailsFragment">
+        <argument
+            android:name="articleDetails"
+            app:argType="com.iti.elfarsisy.mad41.newsly.data.model.ArticlesItem" />
+    </fragment>
 </navigation>

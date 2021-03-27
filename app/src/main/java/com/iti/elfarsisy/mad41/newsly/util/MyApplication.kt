@@ -3,6 +3,7 @@ package com.iti.elfarsisy.mad41.myapplication.util
 import android.app.Application
 import android.content.Context
 import com.iti.elfarsisy.mad41.newsly.BuildConfig
+import com.iti.elfarsisy.mad41.newsly.data.repository.NewsRepository
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -13,6 +14,7 @@ import timber.log.Timber.DebugTree
 * */
 
 class MyApplication : Application() {
+    val newsRepository by lazy { NewsRepository(this) }
     override fun onCreate() {
         super.onCreate()
         INSTANCE = applicationContext
