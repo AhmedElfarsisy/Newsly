@@ -20,7 +20,7 @@ import com.iti.elfarsisy.mad41.newsly.features.home.viewmodel.HomeViewModelFacto
 import timber.log.Timber
 
 class ArticleDetailsFragment : Fragment() {
-    private val args: ArticleDetailsFragmentArgs by navArgs()
+    private val args: ArticleDetailsragmentArgs by navArgs()
     private val viewModel by viewModels<ArticleDetailsViewModel>() {
         ArticleDetailsViewModelFactory(args.articleDetails )
     }
